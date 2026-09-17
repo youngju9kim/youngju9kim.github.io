@@ -1,0 +1,28 @@
+{
+  "name": "workout-coach",
+  "version": "1.0.0",
+  "description": "50대 운동 복귀자를 위한 머신 중심 근력운동 코치 PWA",
+  "private": true,
+  "type": "module",
+  "comment": "사내 웹필터가 46KB 넘는 업로드 요청을 차단해 package-lock.json(218KB)을 저장소에 둘 수 없다. 대신 아래 버전을 정확히 고정해 CI 가 같은 버전으로 빌드하게 한다. 버전을 올릴 때는 로컬에서 빌드를 확인한 뒤 고칠 것.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.30.4"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.9.3",
+    "vite": "5.4.21",
+    "vite-plugin-pwa": "0.20.5"
+  }
+}

@@ -1,0 +1,147 @@
+.session {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-top: var(--space-16);
+  min-height: 100dvh;
+}
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+/* ── 자세 가이드: 영상 80% + 하단 자동 순환 자막 ── */
+.guide {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: var(--space-12);
+}
+/* 큰 영상 영역: 남은 공간을 채워 화면 대부분을 차지 */
+.videoArea {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  background: #0b1220;
+}
+/* 하단 자막(영상 위 오버레이) */
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--space-24) var(--space-16) var(--space-16);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+.captionText {
+  margin: 0;
+  color: #ffffff;
+  font-size: var(--font-size-body-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+  text-align: center;
+}
+.captionNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  margin-right: var(--space-8);
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-bold);
+  vertical-align: middle;
+}
+.dots {
+  display: flex;
+  gap: 6px;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.45);
+}
+.dotActive {
+  background: var(--color-primary-bright);
+  width: 20px;
+}
+.guideFooter {
+  flex: 0 0 auto;
+  padding-bottom: calc(var(--space-8) + env(safe-area-inset-bottom));
+}
+
+/* ── 세트 진행 ── */
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  flex: 1 1 auto;
+  padding-top: var(--space-16);
+}
+.weightRow {
+  max-width: 320px;
+  width: 100%;
+  margin: 0 auto;
+}
+.tip {
+  background: var(--color-surface-sunken);
+  border: none;
+  box-shadow: none;
+}
+.logFooter {
+  margin-top: auto;
+  padding: var(--space-16) 0 calc(var(--space-16) + env(safe-area-inset-bottom));
+}
+
+/* ── Rest Timer: 다크 풀스크린(테마 무관) ── */
+.restOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-16);
+  padding: var(--space-24) var(--space-24) calc(var(--space-24) + env(safe-area-inset-bottom));
+  text-align: center;
+  /* 항상 다크 컨텍스트 + 링 트랙을 어둡게 오버라이드 */
+  background: #0b1220;
+  --color-surface-sunken: #1f2a3d;
+}
+.restDone {
+  color: #ffffff;
+}
+.restLabel {
+  color: #94a3b8;
+}
+.restTime {
+  color: #ffffff;
+}
+.restNext {
+  color: #cbd5e1;
+}
+.restActions {
+  display: flex;
+  gap: var(--space-12);
+}
+.restActions :global(button) {
+  color: #ffffff;
+  border-color: #33415f;
+}
+.restSkip {
+  color: #94a3b8 !important;
+}

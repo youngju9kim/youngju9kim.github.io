@@ -1,0 +1,90 @@
+/*
+ * Design Token — Semantic (테마별 매핑)
+ *
+ * 근거: 03_DESIGN_SYSTEM §5.2 Semantic Colors, §6 Theme, §11 Shadow.
+ * 컴포넌트는 오직 이 --color-* / --shadow-* / --elevation-* 토큰만 참조한다. (TOKEN-002)
+ *
+ * 테마 적용: <html data-theme="light|dark">. 'system' 은 JS(useTheme)가
+ *            OS 설정을 읽어 위 속성으로 변환한다. (03 §6, FR-002 다크 모드)
+ */
+
+/* ── Light Theme (기본) ── */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --color-background: var(--fc-gray-50);
+  --color-surface: var(--fc-white);
+  --color-surface-raised: var(--fc-white);
+  --color-surface-sunken: var(--fc-gray-100);
+
+  --color-text-primary: var(--fc-gray-900); /* on surface ~17:1 */
+  --color-text-secondary: var(--fc-gray-600); /* on surface ~7:1 */
+  --color-text-disabled: var(--fc-gray-400); /* disabled: AA 예외 */
+  --color-text-on-primary: var(--fc-white); /* on primary 5.2:1 */
+
+  --color-primary: var(--fc-green-700);
+  --color-primary-hover: var(--fc-green-800);
+  --color-primary-subtle: var(--fc-green-100);
+  /* 밝은 초록: 진행 링·대형 장식용(대형 요소라 3:1로 충분) */
+  --color-primary-bright: var(--fc-green-500);
+  --color-secondary: var(--fc-green-700);
+
+  --color-border: var(--fc-gray-200);
+  --color-border-strong: var(--fc-gray-300);
+
+  --color-success: var(--fc-green-700);
+  --color-warning: var(--fc-orange-500);
+  --color-error: var(--fc-red-500);
+  --color-info: var(--fc-blue-500);
+
+  --color-focus-ring: var(--fc-green-600);
+  --color-overlay: rgba(15, 23, 42, 0.48);
+
+  /* Shadow (03 §11) — Light: 최소 사용 */
+  --shadow-none: none;
+  --shadow-s: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-m: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --shadow-l: 0 8px 24px rgba(15, 23, 42, 0.12);
+  --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.16);
+}
+
+/* ── Dark Theme ── */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-background: #0b1220;
+  --color-surface: #131c2b;
+  --color-surface-raised: #1b2637;
+  --color-surface-sunken: #0e1626;
+
+  --color-text-primary: var(--fc-gray-100); /* on surface high contrast */
+  --color-text-secondary: var(--fc-gray-400); /* on surface ~7:1 */
+  --color-text-disabled: var(--fc-gray-600);
+  --color-text-on-primary: var(--fc-white);
+
+  --color-primary: var(--fc-green-700);
+  --color-primary-hover: var(--fc-green-600);
+  --color-primary-subtle: #12331f;
+  --color-primary-bright: var(--fc-green-500);
+  --color-secondary: var(--fc-green-400);
+
+  --color-border: #24304a;
+  --color-border-strong: #33415f;
+
+  /* Dark: 상태색은 어두운 배경에서 식별되도록 밝은 톤 사용 */
+  --color-success: var(--fc-green-400);
+  --color-warning: var(--fc-orange-400);
+  --color-error: var(--fc-red-400);
+  --color-info: var(--fc-blue-400);
+
+  --color-focus-ring: var(--fc-green-400);
+  --color-overlay: rgba(0, 0, 0, 0.64);
+
+  /* Dark: 그림자보다 명도 대비 우선(03 §11) — 약하게만 */
+  --shadow-none: none;
+  --shadow-s: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-m: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-l: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
+}

@@ -1,0 +1,49 @@
+/* FB-001 Snackbar. 단일 위치(하단 중앙, Bottom Nav 위). z: snackbar. */
+.region {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(
+    var(--bottom-nav-height) + var(--space-16) + env(safe-area-inset-bottom)
+  );
+  z-index: var(--z-snackbar);
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--space-16);
+  pointer-events: none;
+}
+.snackbar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  max-width: var(--content-max-width);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-l);
+  font-size: var(--font-size-body);
+  pointer-events: auto;
+  animation: snackbar-in var(--motion-normal) var(--ease-decelerate);
+}
+.default {
+  background: var(--color-text-primary);
+  color: var(--color-background);
+}
+.success {
+  background: var(--color-success);
+  color: var(--color-text-on-primary);
+}
+.error {
+  background: var(--color-error);
+  color: var(--color-text-on-primary);
+}
+@keyframes snackbar-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .snackbar {
+    animation: none;
+  }
+}

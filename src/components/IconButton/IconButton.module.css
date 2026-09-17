@@ -1,0 +1,38 @@
+/* CMP-003 Icon Button (03 §15). 반복 사용하는 단일 기능. */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  padding: var(--space-8);
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+}
+.iconButton:hover:not(:disabled) {
+  background: var(--color-surface-sunken);
+}
+.iconButton:active:not(:disabled) {
+  transform: scale(0.94);
+}
+.iconButton:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-disabled);
+}
+.onPrimary {
+  color: var(--color-text-on-primary);
+}
+.danger {
+  color: var(--color-error);
+}
+@media (prefers-reduced-motion: reduce) {
+  .iconButton:active:not(:disabled) {
+    transform: none;
+  }
+}

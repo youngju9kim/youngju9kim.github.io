@@ -1,0 +1,81 @@
+/* CMP-005 Stepper (03 §15). [-] Value [+] */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.label {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+.stepper {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-8);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-cta);
+  min-height: var(--touch-cta);
+  flex: 0 0 auto;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard);
+}
+.btn:hover:not(:disabled) {
+  background: var(--color-surface-sunken);
+}
+.btn:active:not(:disabled) {
+  border-color: var(--color-primary);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.valueWrap {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.value {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-headline);
+  font-weight: var(--font-weight-bold);
+  min-height: var(--touch-cta);
+  padding: 0 var(--space-8);
+  /* Firefox 숫자 스핀 제거 */
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.value::-webkit-outer-spin-button,
+.value::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.value:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+.unit {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  align-self: center;
+}

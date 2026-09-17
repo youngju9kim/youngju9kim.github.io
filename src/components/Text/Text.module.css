@@ -1,0 +1,69 @@
+/* 타이포그래피 역할별 스타일 (03 §7.2). 값은 tokens.css 참조. */
+.display {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}
+.headline {
+  font-size: var(--font-size-headline);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-snug);
+  margin: 0;
+}
+.title {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  margin: 0;
+}
+.bodyLarge {
+  font-size: var(--font-size-body-lg);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+.body {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+.bodySmall {
+  font-size: var(--font-size-body-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+.label {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}
+.caption {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* 색상 역할 */
+.primary {
+  color: var(--color-text-primary);
+}
+.secondary {
+  color: var(--color-text-secondary);
+}
+.onPrimary {
+  color: var(--color-text-on-primary);
+}
+.success {
+  color: var(--color-success);
+}
+.warning {
+  color: var(--color-warning);
+}
+.error {
+  color: var(--color-error);
+}

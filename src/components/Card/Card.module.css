@@ -1,0 +1,34 @@
+/* CMP-006 Card (03 §15). Elevation Level 1. */
+.card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-l);
+  padding: var(--space-16);
+  box-shadow: var(--shadow-m);
+}
+
+/* 클릭 가능한 카드는 정보용 카드와 시각적으로 구분(호버/포커스 반응) */
+.interactive {
+  cursor: pointer;
+  border: none;
+  font: inherit;
+  color: inherit;
+  transition:
+    transform var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard);
+}
+.interactive:hover {
+  box-shadow: var(--shadow-l);
+}
+.interactive:active {
+  transform: scale(0.99);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive:active {
+    transform: none;
+  }
+}

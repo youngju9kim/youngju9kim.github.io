@@ -1,0 +1,24 @@
+.frame {
+  position: relative;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  background: var(--color-surface-sunken);
+}
+.media {
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: cover;
+  display: block;
+}
+
+/* fill: 부모 영역을 꽉 채우는 큰 영상(운동 상세). 어두운 배경 + 전체 영상 표시. */
+.fill {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background: #0b1220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

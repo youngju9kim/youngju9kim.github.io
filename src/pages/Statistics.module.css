@@ -1,0 +1,22 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-top: var(--space-24);
+}
+.ringWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-16);
+}
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8);
+}
+/* RSP-003: 태블릿 이상 통계 카드 3열 */
+@media (min-width: 768px) {
+  .statGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

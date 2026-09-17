@@ -1,0 +1,52 @@
+/* CMP-007 List Item (03 §15). Leading · Title/Subtitle · Trailing. */
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-12) var(--space-16);
+  background: var(--color-surface);
+  border: none;
+  text-align: left;
+  color: var(--color-text-primary);
+  font: inherit;
+}
+.interactive {
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+.interactive:hover {
+  background: var(--color-surface-sunken);
+}
+.leading {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--color-text-secondary);
+}
+.body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.title {
+  font-size: var(--font-size-body-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.subtitle {
+  font-size: var(--font-size-body-sm);
+  color: var(--color-text-secondary);
+}
+.trailing {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--color-text-secondary);
+}

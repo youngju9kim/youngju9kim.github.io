@@ -1,0 +1,49 @@
+/* CMP-004 Input Field (03 §15, SCR-004: Label→Input→Helper→Validation). */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+.label {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+.control {
+  min-height: var(--touch-min);
+  padding: 0 var(--space-16);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-m);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-body-lg);
+  transition: border-color var(--motion-fast) var(--ease-standard);
+}
+.control::placeholder {
+  color: var(--color-text-disabled);
+}
+.control:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+.control:disabled {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+.error .control {
+  border-color: var(--color-error);
+}
+.helper {
+  font-size: var(--font-size-body-sm);
+  color: var(--color-text-secondary);
+}
+.validation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--font-size-body-sm);
+  color: var(--color-error);
+}

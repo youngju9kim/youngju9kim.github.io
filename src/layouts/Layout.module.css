@@ -1,0 +1,38 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--color-background);
+}
+.contentWithNav {
+  flex: 1 1 auto;
+  /* Bottom Nav 높이만큼 하단 여백 확보(겹침 방지) */
+  padding-bottom: calc(
+    var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--space-16)
+  );
+}
+.contentFull {
+  flex: 1 1 auto;
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--space-16));
+}
+/* RSP-002/003: 콘텐츠 최대 폭 + 중앙 정렬 + 좌우 마진 */
+.container {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 var(--layout-margin);
+}
+
+/* 태블릿 이상: 좌우 여백 확대 (RSP-002 Large Mobile→Tablet) */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--space-32);
+  }
+}
+
+.fallback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-top: var(--space-24);
+}

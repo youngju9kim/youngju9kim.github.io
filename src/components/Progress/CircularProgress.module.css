@@ -1,0 +1,26 @@
+.wrap {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+}
+.svg {
+  transform: rotate(-90deg);
+}
+.track {
+  stroke: var(--color-surface-sunken);
+}
+.indicator {
+  stroke: var(--color-primary);
+  transition: stroke-dashoffset var(--motion-normal) var(--ease-standard);
+}
+.indicatorEmphasized {
+  stroke: var(--color-warning);
+  transition: stroke-dashoffset var(--motion-normal) var(--ease-standard);
+}
+.center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}

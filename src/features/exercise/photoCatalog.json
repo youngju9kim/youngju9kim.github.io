@@ -1,0 +1,306 @@
+{
+  "assisted-dips": {
+    "name": "어시스트딥스",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "assisted-pullup": {
+    "name": "어시스트풀업",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "bird-dog": {
+    "name": "버드독",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "cable-biceps-curl": {
+    "name": "케이블바이셉컬",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "cable-crossover": {
+    "name": "케이블크로스오버",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "cable-face-pull": {
+    "name": "케이블페이스풀",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "cable-fly": {
+    "name": "케이블플라이",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "cable-lateral-raise": {
+    "name": "케이블레터럴레이즈",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "cable-pullover": {
+    "name": "케이블풀오버",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "cable-pushdown": {
+    "name": "케이블푸시다운",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "chest-press": {
+    "name": "체스트프레스",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "glute-bridge": {
+    "name": "글루트브리지",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "hack-squat": {
+    "name": "핵스쿼트",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "hammer-chest-press": {
+    "name": "해머스트렝스체스트프레스",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "hip-abduction": {
+    "name": "힙어브덕션",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "hip-adduction": {
+    "name": "힙어덕션",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "incline-chest-press": {
+    "name": "인클라인체스트프레스",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "lat-pulldown": {
+    "name": "랫풀다운",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "leg-extension": {
+    "name": "레그익스텐션",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "leg-press": {
+    "name": "레그프레스",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "lunge": {
+    "name": "런지",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "machine-biceps-curl": {
+    "name": "머신바이셉컬",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "machine-lateral-raise": {
+    "name": "머신레터럴레이즈",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "machine-row": {
+    "name": "머신로우",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "machine-shoulder-press": {
+    "name": "머신숄더프레스",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "mountain-climber": {
+    "name": "마운틴클라이머",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "overhead-cable-extension": {
+    "name": "오버헤드케이블익스텐션",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "pec-deck": {
+    "name": "펙덱",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "plank": {
+    "name": "플랭크",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "push-up": {
+    "name": "푸시업",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "rear-delt-fly": {
+    "name": "리어델트플라이",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "seated-leg-curl": {
+    "name": "시티드레그컬",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "seated-row": {
+    "name": "시티드로우",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "sit-up": {
+    "name": "윗몸일으키기",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "smith-squat": {
+    "name": "스미스머신스쿼트",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "squat": {
+    "name": "스쿼트",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "standing-calf-raise": {
+    "name": "스탠딩카프레이즈",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  },
+  "straight-arm-pulldown": {
+    "name": "스트레이트암풀다운",
+    "steps": [
+      1,
+      2,
+      3
+    ]
+  }
+}

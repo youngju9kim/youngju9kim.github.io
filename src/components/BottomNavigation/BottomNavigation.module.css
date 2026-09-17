@@ -1,0 +1,55 @@
+/* NAV-001 Bottom Navigation. Elevation 2, z: nav. */
+.nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+.tab {
+  flex: 1 1 0;
+  max-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--touch-min);
+  padding: var(--space-8) var(--space-4);
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  transition: color var(--motion-fast) var(--ease-standard);
+}
+.tab:hover {
+  color: var(--color-text-primary);
+}
+/* 활성: 색상 + 아이콘 배경 pill(형태 변화) */
+.active {
+  color: var(--color-primary);
+}
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+.active .iconWrap {
+  background: var(--color-primary-subtle);
+}
+.tabLabel {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+.active .tabLabel {
+  font-weight: var(--font-weight-bold);
+}

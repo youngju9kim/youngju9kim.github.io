@@ -1,0 +1,59 @@
+# main 브랜치에 올라오면 자동으로 빌드해서 GitHub Pages 에 배포한다.
+# (코드를 고쳐 push 하면 몇 분 뒤 폰의 앱도 자동으로 최신이 된다)
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # GitHub 웹에서 수동 실행도 가능
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포가 겹치면 마지막 것만 반영
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # enablement: true 면 저장소 설정에서 Pages 를 직접 켜지 않아도 자동으로 켜진다.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # package-lock.json 은 사내 웹필터 크기 제한 때문에 저장소에 두지 못한다.
+      # package.json 에 버전을 정확히 고정해 두었으므로 npm install 로 같은 버전이 설치된다.
+      - run: npm install --no-audit --no-fund
+
+      - run: npm run build
+
+      # SPA: /history 같은 주소로 바로 들어와도 앱이 뜨도록 404 를 index 로 넘긴다.
+      - run: cp dist/index.html dist/404.html
+
+      # Jekyll 처리를 끄지 않으면 일부 파일이 배포에서 빠질 수 있다.
+      - run: touch dist/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

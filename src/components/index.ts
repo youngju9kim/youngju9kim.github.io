@@ -1,0 +1,24 @@
+/** 공통 컴포넌트 배럴 (03 §15~22). */
+export { Icon, type IconName } from './Icon/Icon';
+export { Text } from './Text/Text';
+export { Button } from './Button/Button';
+export { IconButton } from './IconButton/IconButton';
+export { Card } from './Card/Card';
+export { Input } from './Input/Input';
+export { Stepper } from './Stepper/Stepper';
+export { RepsCounter } from './RepsCounter/RepsCounter';
+export { ListItem } from './ListItem/ListItem';
+export { Chip } from './Chip/Chip';
+export { Badge } from './Badge/Badge';
+export { Divider } from './Divider/Divider';
+export { Skeleton } from './Skeleton/Skeleton';
+export { EmptyState } from './EmptyState/EmptyState';
+export { LinearProgress } from './Progress/LinearProgress';
+export { CircularProgress } from './Progress/CircularProgress';
+export { BarChart } from './Chart/BarChart';
+export { Dialog } from './Dialog/Dialog';
+export { BottomSheet } from './BottomSheet/BottomSheet';
+export { SnackbarProvider, useSnackbar } from './Snackbar/SnackbarProvider';
+export { BottomNavigation } from './BottomNavigation/BottomNavigation';
+export { TopAppBar } from './TopAppBar/TopAppBar';
+export { Fab } from './Fab/Fab';

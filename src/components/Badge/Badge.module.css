@@ -1,0 +1,26 @@
+/* CMP-009 Badge (03 §15). 숫자/상태 강조 (보조 정보). */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--space-8);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+.neutral {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-secondary);
+}
+.primary {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+.pr {
+  background: var(--color-warning);
+  color: var(--color-text-on-primary);
+}

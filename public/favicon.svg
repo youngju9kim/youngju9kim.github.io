@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Workout Coach 파비콘 — 초록 브랜드 + 흰 팔(근육) 실루엣 (첨부 목업 기준).
+  05_IMAGE_STYLE_GUIDE: flat, 단순 기하, 제한 팔레트, 벡터.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Workout Coach">
+  <rect width="64" height="64" rx="16" fill="#15803D"/>
+  <!-- 아령(덤벨) 단순 심볼: 힘/근력 상징 -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="5.5" stroke-linecap="round">
+    <line x1="15" y1="25" x2="15" y2="39"/>
+    <line x1="23" y1="21" x2="23" y2="43"/>
+    <line x1="23" y1="32" x2="41" y2="32"/>
+    <line x1="41" y1="21" x2="41" y2="43"/>
+    <line x1="49" y1="25" x2="49" y2="39"/>
+  </g>
+</svg>

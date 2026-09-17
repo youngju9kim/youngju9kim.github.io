@@ -1,0 +1,13 @@
+/* 운동 자세 사진 프레임. 사진이 없을 때는 SVG 플레이스홀더가 대신 들어간다. */
+.photo {
+  display: block;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-md, 12px);
+  object-fit: cover;
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

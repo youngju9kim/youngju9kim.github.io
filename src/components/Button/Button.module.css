@@ -1,0 +1,99 @@
+/* CMP-001 Primary / CMP-002 Secondary Button (03 §15). 값은 토큰 참조. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-height: var(--touch-min);
+  padding: 0 var(--space-24);
+  border: 2px solid transparent;
+  border-radius: var(--radius-m);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    opacity var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.cta {
+  min-height: var(--touch-cta);
+}
+
+/* ── Variant: Filled (Primary) ── */
+.filled {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+.filled:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+/* ── Variant: Outlined (Secondary) ── */
+.outlined {
+  background: transparent;
+  color: var(--color-secondary);
+  border-color: var(--color-border-strong);
+}
+.outlined:hover:not(:disabled) {
+  background: var(--color-primary-subtle);
+}
+
+/* ── Variant: Text (Secondary) ── */
+.text {
+  background: transparent;
+  color: var(--color-secondary);
+  padding: 0 var(--space-12);
+}
+.text:hover:not(:disabled) {
+  background: var(--color-primary-subtle);
+}
+
+/* ── States ── */
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.loading {
+  cursor: progress;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--radius-full);
+  animation: btn-spin 0.7s linear infinite;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 1.4s;
+  }
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}

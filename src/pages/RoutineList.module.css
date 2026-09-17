@@ -1,0 +1,29 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-top: var(--space-24);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin-bottom: var(--space-16);
+}
+.cardTitle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.cardMenu {
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--space-4);
+}

@@ -1,0 +1,32 @@
+/* CMP-008 Chip (03 §15). 짧은 상태/속성 표시. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  height: 32px;
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-body-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+.filled {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-secondary);
+}
+.outlined {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-strong);
+}
+/* 안전 등급 등 의미 강조 시 상태색(아이콘+텍스트 병행 전제) */
+.success {
+  background: transparent;
+  color: var(--color-success);
+  border: 1px solid currentColor;
+}
+.warning {
+  background: transparent;
+  color: var(--color-warning);
+  border: 1px solid currentColor;
+}

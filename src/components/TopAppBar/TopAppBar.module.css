@@ -1,0 +1,33 @@
+/* NAV-002 Top App Bar. 고정 높이(--top-bar-height), sticky. */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: grid;
+  grid-template-columns: var(--touch-min) 1fr auto;
+  align-items: center;
+  gap: var(--space-8);
+  height: var(--top-bar-height);
+  padding: 0 var(--space-8);
+  padding-top: env(safe-area-inset-top);
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+}
+.leading {
+  display: inline-flex;
+  align-items: center;
+}
+.title {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+}

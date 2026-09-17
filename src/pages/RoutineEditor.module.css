@@ -1,0 +1,41 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-top: var(--space-24);
+}
+.exHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin-bottom: var(--space-16);
+}
+.exTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+  min-width: 0;
+}
+.exMenu {
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--space-4);
+}
+/*
+ * 좁은 화면에서 2열이면 [-] 값 [+] 의 값 칸이 0 에 가깝게 눌려 숫자가 안 보인다.
+ * 터치 타깃(44px)을 줄이는 대신 열 수를 줄인다 — 한 열에 최소 160px 확보.
+ */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-12);
+  margin-top: var(--space-12);
+}
+.pickerList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-12);
+}
