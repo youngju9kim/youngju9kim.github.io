@@ -21,6 +21,11 @@
   box-shadow: var(--shadow-l);
   animation: dialog-pop var(--motion-normal) var(--ease-decelerate);
 }
+/* 입력이 들어가는 대화상자의 본문. 내용이 길면 대화상자 안에서만 스크롤된다. */
+.body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
 .actions {
   display: flex;
   justify-content: flex-end;

@@ -4,7 +4,7 @@
  * 규칙: 확인/취소 모두 제공, 버튼 레이블은 동사(예/아니오 금지).
  * 접근성: role=dialog, aria-modal, Escape 로 취소, 열릴 때 확인 버튼 포커스.
  */
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '@components/Button/Button';
 import { Text } from '@components/Text/Text';
@@ -22,6 +22,8 @@ export interface DialogProps {
   destructive?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  /** 확인만 받는 대화상자가 아니라 입력이 필요한 경우의 본문(예: 비밀번호 입력) */
+  children?: ReactNode;
 }
 
 export function Dialog({
@@ -33,6 +35,7 @@ export function Dialog({
   destructive = false,
   onConfirm,
   onCancel,
+  children,
 }: DialogProps) {
   const titleId = useId();
   const descId = useId();
@@ -68,6 +71,7 @@ export function Dialog({
             {description}
           </Text>
         ) : null}
+        {children ? <div className={styles.body}>{children}</div> : null}
         <div className={styles.actions}>
           <Button variant="text" onClick={onCancel}>
             {cancelLabel}

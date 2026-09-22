@@ -37,6 +37,10 @@ export const STORAGE_KEYS = {
   statistics: `${STORAGE_NAMESPACE}/statistics`,
   /** 즐겨찾기 루틴 (FR-015) */
   favorites: `${STORAGE_NAMESPACE}/favorites`,
+  /** 프로필 목록 — 프로필 구분 대상이 아닌 전역 키 (storage/profileScope) */
+  profiles: `${STORAGE_NAMESPACE}/profiles`,
+  /** 현재 로그인한 프로필 id — 전역 키 */
+  activeProfile: `${STORAGE_NAMESPACE}/active_profile`,
 } as const;
 
 export type StorageKey = keyof typeof STORAGE_KEYS;

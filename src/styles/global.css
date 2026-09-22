@@ -52,6 +52,24 @@ svg {
   max-width: 100%;
 }
 
+/* 드롭다운 — Input 컴포넌트와 같은 생김새. 터치 타깃 44px 이상 유지(A11Y). */
+.native-select {
+  width: 100%;
+  min-height: var(--touch-cta);
+  margin-top: var(--space-8);
+  padding: 0 var(--space-12);
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-body);
+}
+.native-select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
 /* 본문 바로가기 링크 — 포커스 시에만 노출 (A11Y-005) */
 .skip-link {
   position: fixed;

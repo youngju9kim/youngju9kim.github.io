@@ -11,6 +11,7 @@
  */
 import { STORAGE_SCHEMA_VERSION } from '@constants/storage';
 import type { StoredEnvelope } from '@models/common';
+import { profileScope } from './profileScope';
 
 function isStorageAvailable(): boolean {
   try {
@@ -30,7 +31,7 @@ export const storageAdapter = {
     if (!isStorageAvailable()) return null;
     let raw: string | null;
     try {
-      raw = localStorage.getItem(key);
+      raw = localStorage.getItem(profileScope.resolve(key));
     } catch {
       return null;
     }
@@ -62,7 +63,7 @@ export const storageAdapter = {
         schemaVersion: STORAGE_SCHEMA_VERSION,
         data,
       };
-      localStorage.setItem(key, JSON.stringify(envelope));
+      localStorage.setItem(profileScope.resolve(key), JSON.stringify(envelope));
       return true;
     } catch {
       return false; // QuotaExceeded 등 (ERR-001)
@@ -72,7 +73,7 @@ export const storageAdapter = {
   remove(key: string): void {
     if (!isStorageAvailable()) return;
     try {
-      localStorage.removeItem(key);
+      localStorage.removeItem(profileScope.resolve(key));
     } catch {
       /* no-op */
     }

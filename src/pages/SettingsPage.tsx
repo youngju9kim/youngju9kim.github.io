@@ -28,6 +28,10 @@ import {
   INTENSITY_DESCRIPTIONS,
   type Intensity,
 } from '@services/weightRecommender';
+import { authService, PIN_LENGTH } from '@services/authService';
+import { useAuth } from '@hooks/useAuth';
+import { SECURITY_QUESTIONS } from '@models/profile';
+import { PinPad } from '@components';
 import { backupService } from '@services/backupService';
 import { appService } from '@services/appService';
 import styles from './Settings.module.css';
@@ -65,6 +69,48 @@ export function SettingsPage() {
 
   const patchProfile = (patch: Partial<UserProfile>) => {
     setProfileState(settingsRepository.setProfile(patch));
+  };
+
+  // 계정(프로필 로그인) 관련. 위의 `profile` 은 신체 정보라 이름을 구분한다.
+  const { profile: account, signOut, refresh } = useAuth();
+  const [pinDialog, setPinDialog] = useState(false);
+  const [questionDialog, setQuestionDialog] = useState(false);
+  const [currentPin, setCurrentPin] = useState('');
+  const [newPin, setNewPin] = useState('');
+  const [questionId, setQuestionId] = useState(
+    () => account?.security?.questionId ?? SECURITY_QUESTIONS[0].id,
+  );
+  const [answer, setAnswer] = useState('');
+
+  const closePinDialog = () => {
+    setPinDialog(false);
+    setCurrentPin('');
+    setNewPin('');
+  };
+
+  const submitPinChange = async () => {
+    if (!account) return;
+    const result = await authService.changePin(account.id, currentPin, newPin);
+    if (result.ok) {
+      closePinDialog();
+      refresh();
+      snackbar.show('비밀번호를 변경했습니다.', { tone: 'success', icon: 'success' });
+    } else {
+      snackbar.show(result.error, { tone: 'error', icon: 'error' });
+    }
+  };
+
+  const submitQuestion = async () => {
+    if (!account) return;
+    const result = await authService.setSecurityQuestion(account.id, questionId, answer);
+    if (result.ok) {
+      setQuestionDialog(false);
+      setAnswer('');
+      refresh();
+      snackbar.show('보안 질문을 저장했습니다.', { tone: 'success', icon: 'success' });
+    } else {
+      snackbar.show(result.error, { tone: 'error', icon: 'error' });
+    }
   };
 
   const changeUnit = (u: WeightUnit) => {
@@ -127,6 +173,28 @@ export function SettingsPage() {
                 settingsRepository.setUserName(e.target.value);
               }}
             />
+          </div>
+        </Card>
+
+        {/* 계정 — 프로필 전환·비밀번호·보안 질문 */}
+        <Card>
+          <Text variant="title" as="h2">계정</Text>
+          <Text variant="body-small" color="secondary" style={{ marginTop: 4 }}>
+            현재 <b>{account?.name ?? '-'}</b> 프로필로 사용 중입니다.
+            {account && !account.security
+              ? ' 보안 질문이 없어 비밀번호를 잊으면 찾을 수 없습니다.'
+              : ''}
+          </Text>
+          <div className={styles.dataActions}>
+            <Button variant="outlined" fullWidth onClick={() => setPinDialog(true)}>
+              비밀번호 변경
+            </Button>
+            <Button variant="outlined" fullWidth onClick={() => setQuestionDialog(true)}>
+              {account?.security ? '보안 질문 변경' : '보안 질문 등록'}
+            </Button>
+            <Button variant="text" fullWidth onClick={signOut}>
+              로그아웃 (프로필 전환)
+            </Button>
           </div>
         </Card>
 
@@ -287,6 +355,59 @@ export function SettingsPage() {
           />
         </Card>
       </div>
+
+      {/* 비밀번호 변경 */}
+      <Dialog
+        open={pinDialog}
+        title="비밀번호 변경"
+        confirmLabel="변경"
+        onConfirm={submitPinChange}
+        onCancel={closePinDialog}
+      >
+        <div className={styles.pinDialog}>
+          <Text variant="body-small" color="secondary">
+            {currentPin.length < PIN_LENGTH
+              ? '현재 비밀번호를 입력하세요.'
+              : '새 비밀번호를 입력하세요.'}
+          </Text>
+          <PinPad
+            value={currentPin.length < PIN_LENGTH ? currentPin : newPin}
+            onChange={(v) => (currentPin.length < PIN_LENGTH ? setCurrentPin(v) : setNewPin(v))}
+            onComplete={() => undefined}
+            label={currentPin.length < PIN_LENGTH ? '현재 비밀번호' : '새 비밀번호'}
+          />
+        </div>
+      </Dialog>
+
+      {/* 보안 질문 등록·변경 */}
+      <Dialog
+        open={questionDialog}
+        title="보안 질문"
+        description="비밀번호를 잊었을 때 본인 확인에 사용합니다. 답은 저장되지 않고 확인용 암호값만 남습니다."
+        confirmLabel="저장"
+        onConfirm={submitQuestion}
+        onCancel={() => { setQuestionDialog(false); setAnswer(''); }}
+      >
+        <select
+          className="native-select"
+          value={questionId}
+          onChange={(e) => setQuestionId(e.target.value)}
+          aria-label="보안 질문 선택"
+        >
+          {SECURITY_QUESTIONS.map((q) => (
+            <option key={q.id} value={q.id}>{q.label}</option>
+          ))}
+        </select>
+        <div style={{ marginTop: 12 }}>
+          <Input
+            label="답"
+            placeholder="띄어쓰기·대소문자는 구분하지 않습니다"
+            value={answer}
+            maxLength={40}
+            onChange={(e) => setAnswer(e.target.value)}
+          />
+        </div>
+      </Dialog>
 
       {/* 복원 확인 (기존 데이터 덮어쓰기) */}
       <Dialog

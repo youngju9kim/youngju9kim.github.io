@@ -7,6 +7,7 @@ export { Card } from './Card/Card';
 export { Input } from './Input/Input';
 export { Stepper } from './Stepper/Stepper';
 export { RepsCounter } from './RepsCounter/RepsCounter';
+export { PinPad } from './PinPad/PinPad';
 export { ListItem } from './ListItem/ListItem';
 export { Chip } from './Chip/Chip';
 export { Badge } from './Badge/Badge';

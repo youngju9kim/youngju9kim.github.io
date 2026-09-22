@@ -1,0 +1,81 @@
+/* 숫자 4자리 입력 — 한 손으로 누르기 쉬운 큰 키패드 */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+.dots {
+  display: flex;
+  gap: var(--space-16);
+}
+.dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border-strong);
+  background: transparent;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+.dotFilled {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.dotError {
+  border-color: var(--color-error);
+  background: var(--color-error);
+}
+
+/* 오답일 때 좌우로 흔들어 실패를 분명히 알린다 */
+.shake {
+  animation: shake 0.4s var(--ease-standard);
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shake { animation: none; }
+}
+
+.keys {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-12);
+  width: 100%;
+  max-width: 300px;
+}
+
+.key {
+  min-height: 64px;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-headline);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+.key:hover:not(:disabled) {
+  background: var(--color-surface-sunken);
+}
+.key:active:not(:disabled) {
+  border-color: var(--color-primary);
+}
+.key:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.keyAction {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+}
+.keySpacer {
+  visibility: hidden;
+}
