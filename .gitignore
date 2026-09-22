@@ -21,6 +21,10 @@ dev-dist/
 package-lock.json
 public/videos/
 
+# 이 PC 전용 npm 설정(사내 프록시 주소·strict-ssl 해제). 저장소에 올리면
+# GitHub 빌드 서버가 사내 프록시에 접속하려다 무한 대기한다.
+.npmrc
+
 # GitHub Pages 무료 배포는 공개 저장소만 가능하다. 앱 동작에 필요 없는 문서·산출물은
 # 인터넷에 올라가지 않도록 제외한다. (원본은 K: 드라이브와 이 PC 에 그대로 있다)
 docs/
