@@ -20,6 +20,7 @@ import {
 } from '@components';
 import { ExerciseVideo } from '@features/exercise/ExerciseVideo';
 import { getGuideSteps } from '@features/exercise/exerciseGuide';
+import { usesWeight, isAssistMachine } from '@services/weightRecommender';
 import { workoutRepository } from '@repositories/workoutRepository';
 import { exerciseRepository } from '@repositories/exerciseRepository';
 import { workoutService } from '@services/workoutService';
@@ -104,6 +105,8 @@ export function WorkoutSessionPage() {
   if (!exercise) return null;
 
   const unit = currentUnit();
+  // 기록이 없으면 buildSessionExercises 가 넣은 값이 추천 중량이다.
+  const weightIsSuggested = !workoutService.hasPreviousPerformance(exercise.id);
   const progress = workoutService.getProgress(session);
   const totalExercises = session.exercises.length;
   const inLogPhase = logExercise === exIndex;
@@ -209,18 +212,29 @@ export function WorkoutSessionPage() {
             max={100}
           />
 
-          <div className={styles.weightRow}>
-            <Stepper
-              label="중량"
-              value={weight}
-              min={0}
-              max={500}
-              step={2.5}
-              allowDecimal
-              unit={unit}
-              onChange={setWeight}
-            />
-          </div>
+          {/* 맨몸 운동은 중량 개념이 없어 입력을 숨긴다. */}
+          {usesWeight(exercise) ? (
+            <div className={styles.weightRow}>
+              <Stepper
+                label={isAssistMachine(exercise.id) ? '보조 중량' : '중량'}
+                value={weight}
+                min={0}
+                max={500}
+                step={2.5}
+                allowDecimal
+                unit={unit}
+                onChange={setWeight}
+              />
+              <Text variant="caption" color="secondary" className={styles.weightHint}>
+                {isAssistMachine(exercise.id)
+                  ? '보조 중량이 클수록 쉬워집니다. '
+                  : ''}
+                {weightIsSuggested
+                  ? '처음 하는 운동이라 추천값을 넣어 뒀어요. 직접 조절하세요.'
+                  : '지난번에 사용한 중량입니다.'}
+              </Text>
+            </div>
+          ) : null}
 
           {exercise.formCues.length > 0 ? (
             <Card className={styles.tip}>

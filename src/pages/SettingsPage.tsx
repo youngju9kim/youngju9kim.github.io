@@ -20,7 +20,14 @@ import {
   settingsRepository,
   type ThemePreference,
   type WeightUnit,
+  type Sex,
+  type UserProfile,
 } from '@repositories/settingsRepository';
+import {
+  INTENSITY_LABELS,
+  INTENSITY_DESCRIPTIONS,
+  type Intensity,
+} from '@services/weightRecommender';
 import { backupService } from '@services/backupService';
 import { appService } from '@services/appService';
 import styles from './Settings.module.css';
@@ -33,6 +40,14 @@ const THEME_OPTIONS: { value: ThemePreference; label: string; icon: 'sun' | 'moo
 
 const UNIT_OPTIONS: WeightUnit[] = ['kg', 'lb'];
 
+const SEX_OPTIONS: { value: Sex; label: string }[] = [
+  { value: 'female', label: '여성' },
+  { value: 'male', label: '남성' },
+  { value: 'unset', label: '선택 안 함' },
+];
+
+const INTENSITY_OPTIONS: Intensity[] = ['light', 'normal', 'strong'];
+
 export function SettingsPage() {
   const navigate = useNavigate();
   const { preference, setPreference } = useTheme();
@@ -44,6 +59,13 @@ export function SettingsPage() {
   const [name, setName] = useState(() => settingsRepository.getUserName());
   const [resetOpen, setResetOpen] = useState(false);
   const [restoreText, setRestoreText] = useState<string | null>(null);
+  const [profile, setProfileState] = useState<UserProfile>(() =>
+    settingsRepository.getProfile(),
+  );
+
+  const patchProfile = (patch: Partial<UserProfile>) => {
+    setProfileState(settingsRepository.setProfile(patch));
+  };
 
   const changeUnit = (u: WeightUnit) => {
     settingsRepository.setUnit(u);
@@ -106,6 +128,72 @@ export function SettingsPage() {
               }}
             />
           </div>
+        </Card>
+
+        {/* 신체 정보 — 처음 하는 운동의 시작 중량 추천에 사용 */}
+        <Card>
+          <Text variant="title" as="h2">내 몸 정보</Text>
+          <Text variant="body-small" color="secondary" style={{ marginTop: 4, marginBottom: 12 }}>
+            처음 하는 운동의 시작 중량을 자동으로 추천하는 데 쓰입니다.
+            이미 해본 운동은 지난번에 사용한 중량이 그대로 나옵니다.
+          </Text>
+
+          <Text variant="label" as="h3">성별</Text>
+          <div className={styles.optionGroup} role="group" aria-label="성별 선택">
+            {SEX_OPTIONS.map((opt) => (
+              <Button
+                key={opt.value}
+                variant={profile.sex === opt.value ? 'filled' : 'outlined'}
+                onClick={() => patchProfile({ sex: opt.value })}
+                aria-pressed={profile.sex === opt.value}
+              >
+                {opt.label}
+              </Button>
+            ))}
+          </div>
+
+          <div className={styles.profileRow}>
+            <Stepper
+              label="나이"
+              value={profile.age}
+              min={14}
+              max={100}
+              step={1}
+              unit="세"
+              onChange={(age) => patchProfile({ age })}
+            />
+            <Stepper
+              label="체중"
+              value={profile.bodyWeightKg}
+              min={30}
+              max={200}
+              step={1}
+              unit={unit}
+              onChange={(bodyWeightKg) => patchProfile({ bodyWeightKg })}
+            />
+          </div>
+
+          <Text variant="label" as="h3" style={{ marginTop: 16 }}>운동 강도</Text>
+          <div className={styles.optionGroup} role="group" aria-label="운동 강도 선택">
+            {INTENSITY_OPTIONS.map((value) => (
+              <Button
+                key={value}
+                variant={profile.intensity === value ? 'filled' : 'outlined'}
+                onClick={() => patchProfile({ intensity: value })}
+                aria-pressed={profile.intensity === value}
+              >
+                {INTENSITY_LABELS[value]}
+              </Button>
+            ))}
+          </div>
+          <Text variant="body-small" color="secondary" style={{ marginTop: 8 }}>
+            {INTENSITY_DESCRIPTIONS[profile.intensity]}
+          </Text>
+
+          <Text variant="body-small" color="secondary" style={{ marginTop: 12 }}>
+            ⚠️ 추천 중량은 출발점일 뿐입니다. 첫 세트에서 가볍게 느껴지면 올리고,
+            무겁거나 자세가 흐트러지면 반드시 낮춰 주세요.
+          </Text>
         </Card>
 
         {/* 테마 (FR-002) */}

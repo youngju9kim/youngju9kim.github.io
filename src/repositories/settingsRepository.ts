@@ -18,6 +18,31 @@ export interface VideoOverride {
   endSec?: number;
 }
 
+export type Sex = 'male' | 'female' | 'unset';
+
+/**
+ * 시작 중량 추천에 쓰는 신체 정보 (weightRecommender).
+ * 처음 하는 운동의 중량 기본값을 0 대신 개인화된 값으로 채우는 데만 사용한다.
+ */
+export interface UserProfile {
+  sex: Sex;
+  age: number;
+  bodyWeightKg: number;
+  /** 운동 강도 — 추천 중량의 배율 */
+  intensity: 'light' | 'normal' | 'strong';
+}
+
+/**
+ * 프로필을 설정하지 않은 사용자를 위한 기본값.
+ * 다치지 않는 쪽이 중요하므로 강도는 가장 낮은 '가볍게' 로 둔다.
+ */
+export const DEFAULT_PROFILE: UserProfile = {
+  sex: 'unset',
+  age: 50,
+  bodyWeightKg: 70,
+  intensity: 'light',
+};
+
 /** settings 저장 영역의 형태 */
 export interface SettingsData {
   theme: ThemePreference;
@@ -29,6 +54,8 @@ export interface SettingsData {
   userName: string;
   /** 운동 ID → 영상 오버라이드(유튜브) */
   videoOverrides: Record<string, VideoOverride>;
+  /** 시작 중량 추천용 신체 정보 */
+  profile: UserProfile;
 }
 
 export const DEFAULT_SETTINGS: SettingsData = {
@@ -37,13 +64,20 @@ export const DEFAULT_SETTINGS: SettingsData = {
   defaultRestSec: 90,
   userName: '',
   videoOverrides: {},
+  profile: DEFAULT_PROFILE,
 };
 
 function readAll(): SettingsData {
   const result = storageAdapter.read<Partial<SettingsData>>(
     STORAGE_KEYS.settings,
   );
-  return { ...DEFAULT_SETTINGS, ...(result?.data ?? {}) };
+  const stored = result?.data ?? {};
+  return {
+    ...DEFAULT_SETTINGS,
+    ...stored,
+    // profile 은 중첩 객체라 얕은 병합만으로는 이전 버전 데이터에서 항목이 빌 수 있다.
+    profile: { ...DEFAULT_PROFILE, ...(stored.profile ?? {}) },
+  };
 }
 
 function writeMerge(patch: Partial<SettingsData>): void {
@@ -82,6 +116,15 @@ export const settingsRepository = {
   },
   setUserName(userName: string): void {
     writeMerge({ userName });
+  },
+
+  getProfile(): UserProfile {
+    return readAll().profile;
+  },
+  setProfile(patch: Partial<UserProfile>): UserProfile {
+    const profile = { ...readAll().profile, ...patch };
+    writeMerge({ profile });
+    return profile;
   },
 
   getVideoOverride(exerciseId: string): VideoOverride | undefined {

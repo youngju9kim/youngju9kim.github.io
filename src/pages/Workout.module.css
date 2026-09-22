@@ -96,6 +96,12 @@
   width: 100%;
   margin: 0 auto;
 }
+/* 중량이 지난 기록인지 추천값인지 알려주는 보조 문구 */
+.weightHint {
+  display: block;
+  margin-top: var(--space-8);
+  text-align: center;
+}
 .tip {
   background: var(--color-surface-sunken);
   border: none;

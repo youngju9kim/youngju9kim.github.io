@@ -17,6 +17,7 @@ import type {
 } from '@models/workout';
 import { workoutRepository } from '@repositories/workoutRepository';
 import { statisticsService } from '@services/statisticsService';
+import { recommendWeight } from '@services/weightRecommender';
 import { createId } from '@utils/id';
 import { nowISO, elapsedSec } from '@utils/datetime';
 
@@ -34,7 +35,8 @@ function buildSessionExercises(routine: Routine): SessionExercise[] {
     .sort((a, b) => a.order - b.order)
     .map((re) => {
       const prev = previousSet(re.exerciseId);
-      const defaultWeight = prev?.weight ?? 0;
+      // 해본 운동은 지난번 중량이 최우선, 처음 하는 운동만 프로필 기반 추천값(FR-006).
+      const defaultWeight = prev?.weight ?? recommendWeight(re.exerciseId);
       const defaultReps = prev?.reps ?? re.targetReps.min;
       const sets: SetRecord[] = Array.from({ length: re.sets }, (_, i) => ({
         setNumber: i + 1,
@@ -113,6 +115,11 @@ export const workoutService = {
     const updated = { ...session, currentExerciseIndex: index, updatedAt: nowISO() };
     workoutRepository.saveActiveSession(updated);
     return updated;
+  },
+
+  /** 이 운동을 이전에 해본 적이 있는지 — 중량 기본값이 '지난 기록'인지 '추천값'인지 구분용 */
+  hasPreviousPerformance(exerciseId: string): boolean {
+    return previousSet(exerciseId) !== undefined;
   },
 
   isExerciseComplete(ex: SessionExercise): boolean {

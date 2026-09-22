@@ -10,6 +10,13 @@
   margin-top: var(--space-16);
   flex-wrap: wrap;
 }
+/* 나이·체중 입력. 좁은 화면에서는 한 열로 내려 스테퍼 숫자가 눌리지 않게 한다. */
+.profileRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-12);
+  margin-top: var(--space-16);
+}
 .dataActions {
   display: flex;
   flex-direction: column;
