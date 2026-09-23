@@ -20,7 +20,8 @@
  */
 
 /** 비어 있으면 앱은 드라이브 기능을 안내 문구로 대체하고 기기 저장만 사용한다. */
-export const GOOGLE_CLIENT_ID = '';
+export const GOOGLE_CLIENT_ID =
+  '315234407074-mjkf4baibblbtgovbbql8fcmm4jis9g7.apps.googleusercontent.com';
 
 /** 드라이브에 만들어지는 폴더 이름 — 사용자가 내 드라이브에서 직접 볼 수 있다. */
 export const DRIVE_FOLDER_NAME = 'WorkoutCoach';
