@@ -41,6 +41,11 @@ export const STORAGE_KEYS = {
   profiles: `${STORAGE_NAMESPACE}/profiles`,
   /** 현재 로그인한 프로필 id — 전역 키 */
   activeProfile: `${STORAGE_NAMESPACE}/active_profile`,
+  /**
+   * 구글 드라이브 연결 상태 — 이 기기(브라우저) 단위라 전역 키.
+   * 동기화되는 데이터에 섞이면 안 되므로 프로필 폴더 밖에 둔다.
+   */
+  drive: `${STORAGE_NAMESPACE}/drive`,
 } as const;
 
 export type StorageKey = keyof typeof STORAGE_KEYS;

@@ -18,6 +18,7 @@ import type {
 import { workoutRepository } from '@repositories/workoutRepository';
 import { statisticsService } from '@services/statisticsService';
 import { recommendWeight } from '@services/weightRecommender';
+import { notifyDataChanged } from '@utils/events';
 import { createId } from '@utils/id';
 import { nowISO, elapsedSec } from '@utils/datetime';
 
@@ -218,6 +219,8 @@ export const workoutService = {
 
     workoutRepository.clearActiveSession();
     statisticsService.recompute();
+    // 가장 중요한 데이터가 생긴 시점 — 드라이브 사본을 갱신하도록 알린다(연결돼 있을 때만 동작).
+    notifyDataChanged();
     return { record, summary };
   },
 

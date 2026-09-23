@@ -20,9 +20,12 @@ import {
   lockRemainingSec,
 } from '@services/authService';
 import { useAuth } from '@hooks/useAuth';
+import { googleDrive, DriveError } from '@services/googleDrive';
+import { profileSync, type RemoteProfile } from '@services/profileSync';
+import { driveStateRepository } from '@repositories/driveStateRepository';
 import styles from './Login.module.css';
 
-type Step = 'list' | 'pin' | 'create' | 'setPin' | 'recover';
+type Step = 'list' | 'pin' | 'create' | 'setPin' | 'recover' | 'drive';
 
 function initial(name: string): string {
   return name.trim().charAt(0) || '?';
@@ -57,6 +60,9 @@ export function LoginPage() {
   const [answer, setAnswer] = useState('');
   const [answerVerified, setAnswerVerified] = useState(false);
 
+  /** 드라이브에서 읽어온 프로필 목록 (null = 아직 불러오지 않음) */
+  const [remote, setRemote] = useState<RemoteProfile[] | null>(null);
+
   const reloadProfiles = () => setProfiles(authService.listProfiles());
 
   // 잠금 남은 시간 카운트다운
@@ -73,6 +79,7 @@ export function LoginPage() {
     setError(null);
     setAnswer('');
     setAnswerVerified(false);
+    setRemote(null);
   };
 
   const goList = () => {
@@ -248,6 +255,93 @@ export function LoginPage() {
           <Button variant="outlined" fullWidth leftIcon="plus" onClick={() => { resetInputs(); setName(''); setStep('create'); }}>
             새 프로필 만들기
           </Button>
+          {googleDrive.isConfigured() ? (
+            <Button variant="text" fullWidth onClick={() => { resetInputs(); setStep('drive'); }}>
+              구글 드라이브에서 불러오기
+            </Button>
+          ) : null}
+        </>
+      ) : null}
+
+      {/* ── 구글 드라이브에서 프로필 가져오기 (브라우저·기기를 옮겼을 때) ── */}
+      {step === 'drive' ? (
+        <>
+          <Card>
+            <Text variant="title" as="h2">구글 드라이브에서 불러오기</Text>
+            <Text variant="body-small" color="secondary" style={{ marginTop: 4 }}>
+              전에 쓰던 브라우저에서 드라이브에 저장해 두었다면, 여기서 프로필을 가져와
+              기록을 이어서 볼 수 있습니다. 비밀번호는 쓰시던 것 그대로입니다.
+            </Text>
+          </Card>
+
+          {remote === null ? (
+            <Button
+              fullWidth
+              cta
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                setError(null);
+                try {
+                  if (!googleDrive.isConnected()) await googleDrive.connect();
+                  setRemote(await profileSync.listRemote());
+                } catch (e) {
+                  setError(e instanceof DriveError ? e.message : '드라이브를 열지 못했습니다.');
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              {busy ? '연결 중…' : '구글 계정 연결'}
+            </Button>
+          ) : remote.length === 0 ? (
+            <Text variant="body" color="secondary">
+              드라이브에 저장된 프로필이 없습니다.
+            </Text>
+          ) : (
+            <div className={styles.profiles}>
+              {remote.map((r) => (
+                <button
+                  key={r.fileId}
+                  type="button"
+                  className={styles.profileBtn}
+                  disabled={busy}
+                  onClick={async () => {
+                    setBusy(true);
+                    setError(null);
+                    try {
+                      const restored = await profileSync.download(r.fileId);
+                      driveStateRepository.setEnabled(true);
+                      driveStateRepository.setLastSyncedAt(restored.id, r.syncedAt);
+                      reloadProfiles();
+                      snackbar.show(`${restored.name} 프로필을 가져왔습니다.`, {
+                        tone: 'success',
+                        icon: 'success',
+                      });
+                      pickProfile(restored);
+                    } catch (e) {
+                      setError(e instanceof DriveError ? e.message : '가져오지 못했습니다.');
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                >
+                  <span className={styles.avatar} aria-hidden="true">{initial(r.profile.name)}</span>
+                  <span className={styles.profileText}>
+                    <Text variant="title" as="span">{r.profile.name}</Text>
+                    <Text variant="caption" color="secondary">
+                      {r.existsLocally ? '이 기기에도 있음 · 덮어씁니다' : '드라이브에 저장됨'}
+                    </Text>
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className={styles.message}>
+            {error ? <Text variant="body-small" className={styles.error}>{error}</Text> : null}
+          </div>
+          <Button variant="text" fullWidth onClick={goList}>돌아가기</Button>
         </>
       ) : null}
 

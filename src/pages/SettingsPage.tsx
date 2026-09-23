@@ -32,6 +32,24 @@ import { authService, PIN_LENGTH } from '@services/authService';
 import { useAuth } from '@hooks/useAuth';
 import { SECURITY_QUESTIONS } from '@models/profile';
 import { PinPad } from '@components';
+import { googleDrive } from '@services/googleDrive';
+import { useDriveSync, type SyncStatus } from '@hooks/useDriveSync';
+
+/** 드라이브 상태를 사람이 읽을 문장으로 */
+function driveStatusText(
+  status: SyncStatus,
+  lastSyncedAt: string | null,
+  error: string | null,
+): string {
+  if (status === 'syncing') return '저장하는 중…';
+  if (status === 'needs-reconnect') return error ?? '연결이 만료되었습니다. 다시 연결해 주세요.';
+  if (status === 'error') return error ?? '저장하지 못했습니다. 기록은 이 기기에 안전하게 남아 있습니다.';
+  if (status === 'off') return '아직 연결하지 않았습니다. 기록은 이 기기에만 저장됩니다.';
+  if (!lastSyncedAt) return '연결됨. 곧 첫 저장이 이뤄집니다.';
+  const d = new Date(lastSyncedAt);
+  const time = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  return `마지막 저장 ${time}`;
+}
 import { backupService } from '@services/backupService';
 import { appService } from '@services/appService';
 import styles from './Settings.module.css';
@@ -73,6 +91,7 @@ export function SettingsPage() {
 
   // 계정(프로필 로그인) 관련. 위의 `profile` 은 신체 정보라 이름을 구분한다.
   const { profile: account, signOut, refresh } = useAuth();
+  const drive = useDriveSync();
   const [pinDialog, setPinDialog] = useState(false);
   const [questionDialog, setQuestionDialog] = useState(false);
   const [currentPin, setCurrentPin] = useState('');
@@ -196,6 +215,50 @@ export function SettingsPage() {
               로그아웃 (프로필 전환)
             </Button>
           </div>
+        </Card>
+
+        {/* 구글 드라이브 — 브라우저·기기가 바뀌어도 기록이 따라오게 한다 */}
+        <Card>
+          <Text variant="title" as="h2">구글 드라이브 저장</Text>
+          {!googleDrive.isConfigured() ? (
+            <Text variant="body-small" color="secondary" style={{ marginTop: 4 }}>
+              아직 준비 중인 기능입니다. 연결이 준비되면 이 자리에서 켤 수 있습니다.
+            </Text>
+          ) : (
+            <>
+              <Text variant="body-small" color="secondary" style={{ marginTop: 4 }}>
+                기록이 <b>내 구글 드라이브</b>의 WorkoutCoach 폴더에 저장됩니다.
+                다른 브라우저나 새 폰에서도 같은 기록을 이어서 볼 수 있습니다.
+                이 앱이 만든 파일 외에는 접근하지 않습니다.
+              </Text>
+
+              <Text variant="body-small" style={{ marginTop: 12 }}>
+                {driveStatusText(drive.status, drive.lastSyncedAt, drive.error)}
+              </Text>
+
+              <div className={styles.dataActions}>
+                {drive.status === 'off' ? (
+                  <Button variant="outlined" fullWidth onClick={() => void drive.connect()}>
+                    구글 계정 연결
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      variant="outlined"
+                      fullWidth
+                      disabled={drive.status === 'syncing'}
+                      onClick={() => void drive.syncNow()}
+                    >
+                      {drive.status === 'needs-reconnect' ? '다시 연결하기' : '지금 저장하기'}
+                    </Button>
+                    <Button variant="text" fullWidth onClick={drive.disconnect}>
+                      연결 해제
+                    </Button>
+                  </>
+                )}
+              </div>
+            </>
+          )}
         </Card>
 
         {/* 신체 정보 — 처음 하는 운동의 시작 중량 추천에 사용 */}

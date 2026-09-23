@@ -18,6 +18,7 @@ const GLOBAL_KEYS = new Set<string>([
   `${STORAGE_NAMESPACE}/app`, // 앱 초기화 상태
   `${STORAGE_NAMESPACE}/profiles`, // 프로필 목록 자체
   `${STORAGE_NAMESPACE}/active_profile`, // 현재 로그인한 프로필
+  `${STORAGE_NAMESPACE}/drive`, // 구글 드라이브 연결 상태(기기 단위)
 ]);
 
 let activeProfileId: string | null = null;

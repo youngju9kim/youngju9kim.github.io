@@ -16,6 +16,7 @@
 import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@hooks/useTheme';
 import { AuthProvider, useAuth } from '@hooks/useAuth';
+import { DriveSyncProvider } from '@hooks/useDriveSync';
 import { SnackbarProvider } from '@components';
 import { LoginPage } from '@pages/LoginPage';
 import { router } from './routes';
@@ -23,7 +24,11 @@ import { router } from './routes';
 function AuthGate() {
   const { profile } = useAuth();
   if (!profile) return <LoginPage />;
-  return <RouterProvider key={profile.id} router={router} />;
+  return (
+    <DriveSyncProvider>
+      <RouterProvider key={profile.id} router={router} />
+    </DriveSyncProvider>
+  );
 }
 
 export function App() {
