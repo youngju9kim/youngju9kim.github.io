@@ -64,6 +64,8 @@ export const router = createBrowserRouter([
       { path: 'settings/videos', element: <ExerciseVideoSettingsPage /> },
       { path: 'routines', element: <RoutineListPage /> },
       { path: 'routines/new', element: <RoutineCreatePage /> },
+      // 이미 등록된 루틴의 운동 구성을 같은 조건으로 새로 뽑는다(같은 id 로 덮어씀).
+      { path: 'routines/:id/regenerate', element: <RoutineCreatePage /> },
       { path: 'routines/:id/edit', element: <RoutineEditorPage /> },
       { path: 'today/:routineId', element: <TodayWorkoutPage /> },
     ],

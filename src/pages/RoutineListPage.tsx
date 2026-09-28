@@ -89,6 +89,11 @@ export function RoutineListPage() {
                       onClick={() => toggleFavorite(routine)}
                     />
                     <IconButton
+                      icon="shuffle"
+                      label="운동 구성 다시 뽑기"
+                      onClick={() => navigate(`/routines/${routine.id}/regenerate`)}
+                    />
+                    <IconButton
                       icon="edit"
                       label="루틴 편집"
                       onClick={() => navigate(`/routines/${routine.id}/edit`)}

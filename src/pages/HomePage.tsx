@@ -119,6 +119,24 @@ export function HomePage() {
             >
               운동 시작
             </Button>
+
+            {/* 오늘 루틴이 마음에 안 들 때 바로 손볼 수 있는 길 */}
+            <div className={styles.routineActions}>
+              <Button
+                variant="text"
+                leftIcon="shuffle"
+                onClick={() => navigate(`/routines/${todayRoutine.id}/regenerate`)}
+              >
+                다시 뽑기
+              </Button>
+              <Button
+                variant="text"
+                leftIcon="edit"
+                onClick={() => navigate(`/routines/${todayRoutine.id}/edit`)}
+              >
+                루틴 고치기
+              </Button>
+            </div>
           </Card>
 
           {/* 이번 주 운동 */}

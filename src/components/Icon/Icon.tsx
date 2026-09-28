@@ -34,7 +34,9 @@ export type IconName =
   | 'chevron-left'
   | 'chevron-right'
   | 'sun'
-  | 'moon';
+  | 'moon'
+  | 'list'
+  | 'shuffle';
 
 /** 24x24 viewBox 기준 path 데이터 (stroke 기반, 일부 fill) */
 const PATHS: Record<IconName, JSX.Element> = {
@@ -138,6 +140,20 @@ const PATHS: Record<IconName, JSX.Element> = {
     </>
   ),
   moon: <path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z" />,
+  /** 루틴 목록 */
+  list: (
+    <>
+      <path d="M9 6h11M9 12h11M9 18h11" />
+      <path d="M4 6h.01M4 12h.01M4 18h.01" />
+    </>
+  ),
+  /** 다시 뽑기 — 구성을 새로 섞는다 */
+  shuffle: (
+    <>
+      <path d="M4 7h3.5l9 10H20M4 17h3.5l2.2-2.4M14.2 9.4 16.5 7H20" />
+      <path d="M17.5 4.5 20 7l-2.5 2.5M17.5 14.5 20 17l-2.5 2.5" />
+    </>
+  ),
 };
 
 const SIZE_MAP = {

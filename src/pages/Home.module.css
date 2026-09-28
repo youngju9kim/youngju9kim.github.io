@@ -19,6 +19,14 @@
   justify-content: center;
   margin: var(--space-24) 0 var(--space-16);
 }
+/* 오늘 루틴을 다시 뽑거나 고치는 보조 동작 — 운동 시작 아래 */
+.routineActions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+  flex-wrap: wrap;
+}
 .startBtn {
   margin-top: var(--space-8);
 }

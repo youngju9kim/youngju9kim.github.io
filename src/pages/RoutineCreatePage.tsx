@@ -1,12 +1,16 @@
 /**
- * RoutineCreatePage — FR-003 루틴 생성 (UF-001 Create First Routine).
+ * RoutineCreatePage — FR-003 루틴 생성 / 재생성 (UF-001 Create First Routine).
  *
  * 장소/목적/시간/빈도를 고르면 루틴을 만들어 **먼저 보여준다**.
  * 마음에 들 때까지 '다시 뽑기' 를 누를 수 있고, 저장은 사용자가 확정할 때만 한다.
  * (예전에는 만들자마자 저장돼서, 마음에 안 들면 지우는 수밖에 없었다)
+ *
+ * URL 에 :id 가 있으면(`/routines/:id/regenerate`) **이미 등록된 루틴을 다시 만드는** 모드다.
+ * 그 루틴의 생성 조건을 미리 채워 두고, 저장하면 같은 id 로 덮어쓴다.
+ * id 를 유지하므로 즐겨찾기·기록 연결이 끊기지 않는다.
  */
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { TopAppBar, Card, Text, Button, ListItem, useSnackbar } from '@components';
 import {
   routineGenerator,
@@ -32,10 +36,17 @@ export function RoutineCreatePage() {
   const navigate = useNavigate();
   const snackbar = useSnackbar();
 
-  const [equipment, setEquipment] = useState<Equipment>('gym');
-  const [goal, setGoal] = useState<WorkoutGoal>('full-body');
-  const [minutes, setMinutes] = useState(30);
-  const [freq, setFreq] = useState(3);
+  /** :id 가 있으면 기존 루틴을 다시 만드는 모드 */
+  const { id } = useParams<{ id: string }>();
+  const [existing] = useState(() => (id ? routineRepository.getById(id) : undefined));
+  const isRegenerate = existing !== undefined;
+  // 예전에 만든 루틴에는 생성 조건이 없을 수 있다 → 기본값으로 시작한다.
+  const prior = existing?.recipe;
+
+  const [equipment, setEquipment] = useState<Equipment>(prior?.equipment ?? 'gym');
+  const [goal, setGoal] = useState<WorkoutGoal>(prior?.goal ?? 'full-body');
+  const [minutes, setMinutes] = useState(prior?.targetMinutes ?? 30);
+  const [freq, setFreq] = useState(prior?.frequencyPerWeek ?? 3);
 
   /** 아직 저장하지 않은 미리보기 루틴 */
   const [preview, setPreview] = useState<Routine | null>(null);
@@ -58,7 +69,9 @@ export function RoutineCreatePage() {
       avoidExerciseIds: avoid,
     });
 
-  const create = () => setPreview(build());
+  /** 다시 만들기라면 지금 들어 있는 운동부터 피해서 뽑는다. */
+  const create = () =>
+    setPreview(build(existing?.exercises.map((e) => e.exerciseId) ?? []));
 
   const reroll = () => {
     const previousIds = preview?.exercises.map((e) => e.exerciseId) ?? [];
@@ -67,9 +80,24 @@ export function RoutineCreatePage() {
 
   const save = () => {
     if (!preview) return;
-    routineRepository.save(preview);
-    snackbar.show('루틴을 저장했습니다.', { tone: 'success', icon: 'success' });
-    navigate(`/routines/${preview.id}/edit`, { replace: true });
+
+    // 다시 만들기: 같은 id 로 덮어쓴다. 이름은 사용자가 바꿨을 수 있어 그대로 둔다.
+    const routine: Routine = existing
+      ? {
+          ...preview,
+          id: existing.id,
+          name: existing.name,
+          createdAt: existing.createdAt,
+          updatedAt: new Date().toISOString(),
+        }
+      : preview;
+
+    routineRepository.save(routine);
+    snackbar.show(
+      existing ? '루틴을 새로 구성했습니다.' : '루틴을 저장했습니다.',
+      { tone: 'success', icon: 'success' },
+    );
+    navigate(`/routines/${routine.id}/edit`, { replace: true });
   };
 
   /* ── 미리보기 단계 ─────────────────────────────────── */
@@ -79,10 +107,16 @@ export function RoutineCreatePage() {
         <TopAppBar title="이 루틴 어떠세요?" onBack={() => setPreview(null)} />
         <div className={styles.page}>
           <Card>
-            <Text variant="title" as="h2">{preview.name}</Text>
+            <Text variant="title" as="h2">{existing?.name ?? preview.name}</Text>
             <Text variant="body-small" color="secondary" style={{ marginTop: 4 }}>
               운동 {preview.exercises.length}개 · 약 {preview.estimatedDurationMin}분
             </Text>
+            {isRegenerate ? (
+              <Text variant="body-small" color="secondary" style={{ marginTop: 8 }}>
+                저장하면 기존 <b>{existing?.name}</b> 의 운동 구성이 이걸로 바뀝니다.
+                지난 운동 기록은 그대로 남습니다.
+              </Text>
+            ) : null}
           </Card>
 
           {preview.exercises.length === 0 ? (
@@ -123,7 +157,7 @@ export function RoutineCreatePage() {
               onClick={save}
               disabled={preview.exercises.length === 0}
             >
-              이걸로 저장
+              {isRegenerate ? '이걸로 바꾸기' : '이걸로 저장'}
             </Button>
           </div>
         </div>
@@ -134,7 +168,10 @@ export function RoutineCreatePage() {
   /* ── 조건 선택 단계 ────────────────────────────────── */
   return (
     <>
-      <TopAppBar title="루틴 만들기" onBack={() => navigate(-1)} />
+      <TopAppBar
+        title={isRegenerate ? '루틴 다시 만들기' : '루틴 만들기'}
+        onBack={() => navigate(-1)}
+      />
       <div className={styles.page}>
         <Card>
           <Text variant="title" as="h2">운동 장소</Text>
@@ -206,8 +243,13 @@ export function RoutineCreatePage() {
           </div>
         </Card>
 
-        <Button fullWidth cta leftIcon="plus" onClick={create}>
-          루틴 만들기
+        <Button
+          fullWidth
+          cta
+          leftIcon={isRegenerate ? 'shuffle' : 'plus'}
+          onClick={create}
+        >
+          {isRegenerate ? '다시 뽑기' : '루틴 만들기'}
         </Button>
       </div>
     </>
