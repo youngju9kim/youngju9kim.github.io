@@ -18,6 +18,24 @@ export interface RoutineExercise {
   restSec: number;
 }
 
+/** 운동 목적 */
+export type WorkoutGoal = 'full-body' | 'upper' | 'lower' | 'core';
+
+/**
+ * 운동 장소 — 쓸 수 있는 기구가 달라진다.
+ *  gym  : 머신·케이블 포함 전부
+ *  home : 기구 없이 하는 맨몸 운동만
+ */
+export type Equipment = 'gym' | 'home';
+
+/** 루틴을 자동 생성할 때 쓴 조건. 저장해 두면 같은 조건으로 다시 뽑을 수 있다. */
+export interface RoutineRecipe {
+  goal: WorkoutGoal;
+  equipment: Equipment;
+  targetMinutes: number;
+  frequencyPerWeek?: number;
+}
+
 /** 운동 루틴 */
 export interface Routine extends EntityMeta {
   name: string;
@@ -27,4 +45,6 @@ export interface Routine extends EntityMeta {
   exercises: RoutineExercise[];
   /** 생성 방식: 자동 생성 | 사용자 편집 */
   source: 'generated' | 'custom';
+  /** 자동 생성된 루틴이 어떤 조건으로 만들어졌는지(다시 뽑기·표시용) */
+  recipe?: RoutineRecipe;
 }

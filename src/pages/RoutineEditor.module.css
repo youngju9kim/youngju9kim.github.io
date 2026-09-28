@@ -27,6 +27,40 @@
  * 좁은 화면에서 2열이면 [-] 값 [+] 의 값 칸이 0 에 가깝게 눌려 숫자가 안 보인다.
  * 터치 타깃(44px)을 줄이는 대신 열 수를 줄인다 — 한 열에 최소 160px 확보.
  */
+/* 운동 고르기 시트의 부위·맨몸 필터.
+   Chip 은 표시 전용이라(03 §15) 누르는 필터는 별도 버튼으로 둔다. */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin-top: var(--space-12);
+}
+.filterChip {
+  min-height: 36px;
+  padding: 0 var(--space-12);
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-full, 999px);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard);
+}
+.filterChip:hover {
+  background: var(--color-surface-sunken);
+}
+.filterChipOn {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary, #fff);
+}
+.filterChipOn:hover {
+  background: var(--color-primary);
+}
 .controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

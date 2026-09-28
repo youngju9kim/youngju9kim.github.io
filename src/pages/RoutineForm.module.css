@@ -10,3 +10,9 @@
   gap: var(--space-8);
   margin-top: var(--space-16);
 }
+/* 미리보기 하단: 다시 뽑기 / 저장. 좁은 화면에서는 세로로 쌓인다. */
+.previewActions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-8);
+}
