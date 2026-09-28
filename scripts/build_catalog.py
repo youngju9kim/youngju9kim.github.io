@@ -13,8 +13,20 @@ import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_TSV = os.path.join(ROOT, "data", "운동정보.tsv")
-OUT_JSON = os.path.join(ROOT, "src", "features", "exercise", "exerciseCatalog.json")
+OUT_DIR = os.path.join(ROOT, "src", "features", "exercise", "catalog")
 PHOTO_DIR = os.path.join(ROOT, "public", "exercises")
+
+# 카탈로그를 부위별 파일로 나눠 쓴다.
+# 사내 웹필터가 33KB 넘는 파일 업로드를 막아 한 파일에 다 담을 수 없고,
+# 운동이 더 늘어나도 파일당 크기가 완만하게 커지도록 한 조치다.
+CATEGORY_FILE = {
+    "CAT-CHEST": "chest",
+    "CAT-BACK": "back",
+    "CAT-SHOULDER": "shoulder",
+    "CAT-ARM": "arm",
+    "CAT-LEG": "leg",
+    "CAT-CORE": "core",
+}
 
 CATEGORY = {
     "가슴": "CAT-CHEST",
@@ -65,6 +77,28 @@ META = {
     "글루트브리지": ("glute-bridge", "Glute Bridge", "MCH-BODYWEIGHT", "MUS-GLUTES", ["MUS-HAMSTRINGS", "MUS-CORE"], "LV-1", "SAFE-A"),
     "버드독": ("bird-dog", "Bird Dog", "MCH-BODYWEIGHT", "MUS-CORE", ["MUS-GLUTES"], "LV-1", "SAFE-A"),
     "마운틴클라이머": ("mountain-climber", "Mountain Climber", "MCH-BODYWEIGHT", "MUS-CORE", ["MUS-SHOULDER", "MUS-QUADRICEPS"], "LV-2", "SAFE-B"),
+    # ── 맨몸 운동 추가 (2026-09-28) — 집에서 할 운동, 특히 등·어깨 보강 ──
+    "슈퍼맨": ("superman", "Superman", "MCH-BODYWEIGHT", "MUS-BACK", ["MUS-GLUTES"], "LV-1", "SAFE-A"),
+    "리버스스노우엔젤": ("reverse-snow-angel", "Reverse Snow Angel", "MCH-BODYWEIGHT", "MUS-BACK", ["MUS-SHOULDER"], "LV-1", "SAFE-A"),
+    "리버스플랭크": ("reverse-plank", "Reverse Plank", "MCH-BODYWEIGHT", "MUS-BACK", ["MUS-GLUTES", "MUS-CORE"], "LV-2", "SAFE-B"),
+    "YTW레이즈": ("ytw-raise", "Y-T-W Raise", "MCH-BODYWEIGHT", "MUS-SHOULDER", ["MUS-BACK"], "LV-1", "SAFE-A"),
+    "파이크푸시업": ("pike-push-up", "Pike Push-up", "MCH-BODYWEIGHT", "MUS-SHOULDER", ["MUS-TRICEPS"], "LV-2", "SAFE-B"),
+    "스핑크스푸시업": ("sphinx-push-up", "Sphinx Push-up", "MCH-BODYWEIGHT", "MUS-TRICEPS", ["MUS-SHOULDER", "MUS-CORE"], "LV-2", "SAFE-B"),
+    "숄더탭플랭크": ("shoulder-tap-plank", "Shoulder Tap Plank", "MCH-BODYWEIGHT", "MUS-CORE", ["MUS-SHOULDER"], "LV-2", "SAFE-B"),
+    "인치웜": ("inchworm", "Inchworm", "MCH-BODYWEIGHT", "MUS-CORE", ["MUS-SHOULDER", "MUS-HAMSTRINGS"], "LV-2", "SAFE-B"),
+    "베어크롤": ("bear-crawl", "Bear Crawl", "MCH-BODYWEIGHT", "MUS-CORE", ["MUS-SHOULDER", "MUS-QUADRICEPS"], "LV-2", "SAFE-B"),
+    "리버스런지": ("reverse-lunge", "Reverse Lunge", "MCH-BODYWEIGHT", "MUS-QUADRICEPS", ["MUS-GLUTES"], "LV-1", "SAFE-A"),
+    "사이드런지": ("side-lunge", "Side Lunge", "MCH-BODYWEIGHT", "MUS-ADDUCTORS", ["MUS-QUADRICEPS", "MUS-GLUTES"], "LV-2", "SAFE-B"),
+    # 점프·착지 충격이 있어 자동 생성(LV-1~2 · SAFE-A/B)에서는 빠지고 직접 고를 때만 나온다.
+    "점프스쿼트": ("jump-squat", "Jump Squat", "MCH-BODYWEIGHT", "MUS-QUADRICEPS", ["MUS-GLUTES", "MUS-CALVES"], "LV-3", "SAFE-C"),
+    "월싯": ("wall-sit", "Wall Sit", "MCH-BODYWEIGHT", "MUS-QUADRICEPS", ["MUS-GLUTES"], "LV-1", "SAFE-A"),
+    "싱글레그글루트브리지": ("single-leg-glute-bridge", "Single-leg Glute Bridge", "MCH-BODYWEIGHT", "MUS-GLUTES", ["MUS-HAMSTRINGS", "MUS-CORE"], "LV-2", "SAFE-B"),
+    "카프레이즈": ("bodyweight-calf-raise", "Bodyweight Calf Raise", "MCH-BODYWEIGHT", "MUS-CALVES", [], "LV-1", "SAFE-A"),
+    "데드버그": ("dead-bug", "Dead Bug", "MCH-BODYWEIGHT", "MUS-CORE", [], "LV-1", "SAFE-A"),
+    "사이드플랭크": ("side-plank", "Side Plank", "MCH-BODYWEIGHT", "MUS-CORE", ["MUS-SHOULDER"], "LV-2", "SAFE-B"),
+    "바이시클크런치": ("bicycle-crunch", "Bicycle Crunch", "MCH-BODYWEIGHT", "MUS-CORE", [], "LV-2", "SAFE-B"),
+    "리버스크런치": ("reverse-crunch", "Reverse Crunch", "MCH-BODYWEIGHT", "MUS-CORE", [], "LV-2", "SAFE-B"),
+    "할로우바디홀드": ("hollow-body-hold", "Hollow Body Hold", "MCH-BODYWEIGHT", "MUS-CORE", [], "LV-2", "SAFE-B"),
 }
 
 
@@ -100,7 +134,9 @@ def main() -> int:
         if not photos:
             problems.append(f"{name}: 사진 없음({slug}-*.webp)")
 
-        reps = int(row["횟수"])
+        # 단위: '초' 면 버티는 운동(플랭크·월싯 등). 비어 있으면 반복 횟수로 본다.
+        unit = "seconds" if (row.get("단위") or "").strip() == "초" else "reps"
+
         catalog.append(
             {
                 "id": slug,
@@ -113,7 +149,8 @@ def main() -> int:
                 "difficulty": difficulty,
                 "safety": safety,
                 "sets": int(row["세트"]),
-                "reps": reps,
+                "reps": int(row["횟수"]),
+                "repUnit": unit,
                 "restSec": int(row["휴식(초)"]),
                 "steps": steps,
                 "caution": (row["주의사항"] or "").strip(),
@@ -122,14 +159,21 @@ def main() -> int:
         )
 
     catalog.sort(key=lambda e: (e["category"], e["id"]))
-    with open(OUT_JSON, "w", encoding="utf-8") as fp:
-        json.dump(catalog, fp, ensure_ascii=False, indent=2)
+    os.makedirs(OUT_DIR, exist_ok=True)
 
-    print(f"운동 {len(catalog)}종 생성 → {os.path.relpath(OUT_JSON, ROOT)}")
-    by_cat = {}
-    for e in catalog:
-        by_cat[e["category"]] = by_cat.get(e["category"], 0) + 1
-    print("  " + ", ".join(f"{k}:{v}" for k, v in sorted(by_cat.items())))
+    # 들여쓰기 없이 저장한다 — 크기가 곧 업로드 가능 여부이기 때문.
+    # 사람이 읽고 고치는 원본은 data/운동정보.tsv 이므로 여기서는 크기를 우선한다.
+    print(f"운동 {len(catalog)}종 생성 → {os.path.relpath(OUT_DIR, ROOT)}")
+    limit = 33 * 1024
+    for cat, fname in CATEGORY_FILE.items():
+        items = [e for e in catalog if e["category"] == cat]
+        path = os.path.join(OUT_DIR, f"{fname}.json")
+        with open(path, "w", encoding="utf-8") as fp:
+            json.dump(items, fp, ensure_ascii=False, separators=(",", ":"))
+            fp.write("\n")
+        size = os.path.getsize(path)
+        flag = "  ← 33KB 초과! 분할 필요" if size > limit else ""
+        print(f"  {fname:9} {len(items):3}종  {size/1024:6.1f} KB{flag}")
     if problems:
         print("확인 필요:")
         for p in problems:

@@ -17,7 +17,14 @@ import type {
   JointLoad,
   MachineType,
 } from '@models/exercise';
-import catalog from './exerciseCatalog.json';
+// 카탈로그는 부위별 파일로 나눠 둔다(사내 웹필터의 33KB 업로드 한계 + 향후 운동 증가 대비).
+// 파일은 scripts/build_catalog.py 가 data/운동정보.tsv 로부터 생성한다.
+import chest from './catalog/chest.json';
+import back from './catalog/back.json';
+import shoulder from './catalog/shoulder.json';
+import arm from './catalog/arm.json';
+import leg from './catalog/leg.json';
+import core from './catalog/core.json';
 
 /** exerciseCatalog.json 한 줄의 형태 */
 export interface CatalogEntry {
@@ -32,6 +39,8 @@ export interface CatalogEntry {
   safety: string;
   sets: number;
   reps: number;
+  /** 'reps' = 반복 횟수, 'seconds' = 버티는 시간 */
+  repUnit: string;
   restSec: number;
   steps: string[];
   caution: string;
@@ -39,7 +48,14 @@ export interface CatalogEntry {
   photoSteps: number[];
 }
 
-export const CATALOG = catalog as CatalogEntry[];
+export const CATALOG: CatalogEntry[] = [
+  ...chest,
+  ...back,
+  ...shoulder,
+  ...arm,
+  ...leg,
+  ...core,
+] as CatalogEntry[];
 
 const BREATH_DEFAULT = '힘을 쓸 때 숨을 내쉬고, 천천히 돌아오며 숨을 들이쉰다.';
 
@@ -84,8 +100,9 @@ function toExercise(entry: CatalogEntry): Exercise {
     safety: entry.safety as Exercise['safety'],
     jointLoad: jointLoadFor(entry),
     recommendedSets: entry.sets,
-    // 표는 목표 횟수 하나만 주므로 범위의 최소·최대를 같은 값으로 둔다(표시는 "12회").
+    // 표는 목표량 하나만 주므로 범위의 최소·최대를 같은 값으로 둔다(표시는 "12회" / "30초").
     recommendedReps: { min: entry.reps, max: entry.reps },
+    repUnit: entry.repUnit === 'seconds' ? 'seconds' : 'reps',
     recommendedRestSec: entry.restSec,
     tempo: '2-1-2-0',
     rom: 'CONTROLLED',

@@ -52,7 +52,7 @@ export function TodayWorkoutPage() {
                 key={re.exerciseId}
                 leading={<ExerciseIllustration exercise={ex} size={48} />}
                 title={`${i + 1}. ${ex.displayName}`}
-                subtitle={`${CATEGORY_LABELS[ex.category]} · ${re.sets}세트 × ${formatReps(re.targetReps)}`}
+                subtitle={`${CATEGORY_LABELS[ex.category]} · ${re.sets}세트 × ${formatReps(re.targetReps, ex.repUnit)}`}
               />
             );
           })}

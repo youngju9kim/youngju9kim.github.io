@@ -56,21 +56,37 @@ const CATEGORY_PRIORITY: Record<WorkoutGoal, ExerciseCategory[]> = {
   core: ['CAT-CORE', 'CAT-LEG'],
 };
 
+/** 루틴 하나로 성립하려면 이 정도 부위는 채워져야 한다. */
+const MIN_CATEGORIES_PER_GOAL = 2;
+
 /**
- * 장소별로 고를 수 있는 목적.
- * 집에는 맨몸 상체 운동이 푸시업뿐이라 '상체 중심' 을 만들 수 없다.
+ * 장소별로 고를 수 있는 목적 — 실제 운동 데이터에서 계산한다.
+ *
+ * 하드코딩하지 않는 이유: 맨몸 운동을 늘리거나 줄이면 가능한 목적도 달라진다.
+ * (2026-09-17 에는 맨몸 등·어깨 운동이 없어 집에서 '상체 중심' 이 불가능했고,
+ *  09-28 에 운동을 추가하자 가능해졌다)
  */
 export function availableGoals(equipment: Equipment): WorkoutGoal[] {
-  return equipment === 'home'
-    ? ['full-body', 'lower', 'core']
-    : ['full-body', 'upper', 'lower'];
+  const pool = candidatePool(equipment);
+  const filled = new Set(pool.map((ex) => ex.category));
+  return (Object.keys(CATEGORY_PRIORITY) as WorkoutGoal[]).filter((goal) => {
+    const covered = CATEGORY_PRIORITY[goal].filter((c) => filled.has(c));
+    return covered.length >= MIN_CATEGORIES_PER_GOAL;
+  });
 }
 
-/** 운동 1개 예상 소요 시간(분): 세트 × (반복시간 + 휴식) + 셋업. */
+/**
+ * 세트 1회의 운동 시간(초).
+ * 버티는 운동은 목표 시간이 곧 운동 시간이고, 반복 운동은 1회당 3초(템포 기준 보수적)로 본다.
+ */
+function workSecondsPerSet(target: number, unit: Exercise['repUnit']): number {
+  return unit === 'seconds' ? target : target * 3;
+}
+
+/** 운동 1개 예상 소요 시간(분): 세트 × (운동시간 + 휴식) + 셋업. */
 function estimateExerciseMinutes(ex: Exercise): number {
-  const avgReps = (ex.recommendedReps.min + ex.recommendedReps.max) / 2;
-  const workPerSet = avgReps * 3; // 초/회 (템포 기준 보수적)
-  const perSet = workPerSet + ex.recommendedRestSec;
+  const avg = (ex.recommendedReps.min + ex.recommendedReps.max) / 2;
+  const perSet = workSecondsPerSet(avg, ex.repUnit) + ex.recommendedRestSec;
   const setupSec = 30;
   return (ex.recommendedSets * perSet + setupSec) / 60;
 }
@@ -194,8 +210,8 @@ export const routineGenerator = {
     for (const re of exercises) {
       const ex = exerciseRepository.getById(re.exerciseId);
       if (!ex) continue;
-      const avgReps = (re.targetReps.min + re.targetReps.max) / 2;
-      const perSet = avgReps * 3 + re.restSec;
+      const avg = (re.targetReps.min + re.targetReps.max) / 2;
+      const perSet = workSecondsPerSet(avg, ex.repUnit) + re.restSec;
       total += (re.sets * perSet + 30) / 60;
     }
     return Math.round(total);

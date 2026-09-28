@@ -156,7 +156,8 @@ export function WorkoutSessionPage() {
             {exercise.displayName}
           </Text>
           <Text variant="body-small" color="secondary">
-            {sessionExercise.targetSets}세트 × {formatReps(sessionExercise.targetReps)}
+            {sessionExercise.targetSets}세트 ×{' '}
+            {formatReps(sessionExercise.targetReps, exercise.repUnit)}
           </Text>
         </div>
         <IconButton icon="stop" label="운동 종료" tone="danger" onClick={() => setExitOpen(true)} />
@@ -203,7 +204,7 @@ export function WorkoutSessionPage() {
           </Text>
 
           <Text variant="caption" color="secondary" style={{ textAlign: 'center' }}>
-            반복 횟수
+            {exercise.repUnit === 'seconds' ? '버틴 시간(초)' : '반복 횟수'}
           </Text>
           <RepsCounter
             value={reps}

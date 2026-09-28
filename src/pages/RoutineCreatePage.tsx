@@ -134,7 +134,7 @@ export function RoutineCreatePage() {
                   <ListItem
                     key={re.exerciseId}
                     title={`${i + 1}. ${ex.displayName}`}
-                    subtitle={`${CATEGORY_LABELS[ex.category]} · ${re.sets}세트 × ${formatReps(re.targetReps)}`}
+                    subtitle={`${CATEGORY_LABELS[ex.category]} · ${re.sets}세트 × ${formatReps(re.targetReps, ex.repUnit)}`}
                     leading={<ExerciseIllustration exercise={ex} size={48} />}
                   />
                 );
@@ -190,7 +190,6 @@ export function RoutineCreatePage() {
           {equipment === 'home' ? (
             <Text variant="body-small" color="secondary" style={{ marginTop: 12 }}>
               기구 없이 할 수 있는 맨몸 운동으로만 구성합니다.
-              맨몸 운동에는 등·어깨 운동이 없어 상체 중심은 만들 수 없습니다.
             </Text>
           ) : null}
         </Card>

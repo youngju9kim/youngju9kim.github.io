@@ -8,6 +8,9 @@ import type { RepRange } from './common';
 
 export type { RepRange };
 
+/** 목표량 단위 — 반복 횟수인지, 버티는 시간(초)인지 */
+export type RepUnit = 'reps' | 'seconds';
+
 /** 운동 카테고리 (04 §7) */
 export type ExerciseCategory =
   | 'CAT-CHEST'
@@ -91,6 +94,12 @@ export interface Exercise {
   jointLoad: Partial<Record<Joint, JointLoad>>;
   recommendedSets: number;
   recommendedReps: RepRange;
+  /**
+   * 목표량의 단위.
+   *  reps    : 반복 횟수 (대부분)
+   *  seconds : 버티는 시간 — 플랭크·월싯처럼 자세를 유지하는 운동
+   */
+  repUnit: RepUnit;
   recommendedRestSec: number;
   /** 템포 (예: '2-1-2-0', 04 §14) */
   tempo: string;
