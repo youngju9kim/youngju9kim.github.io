@@ -33,6 +33,7 @@ import { useAuth } from '@hooks/useAuth';
 import { SECURITY_QUESTIONS } from '@models/profile';
 import { PinPad } from '@components';
 import { googleDrive } from '@services/googleDrive';
+import { speech } from '@services/speech';
 import { useDriveSync, type SyncStatus } from '@hooks/useDriveSync';
 
 /** 드라이브 상태를 사람이 읽을 문장으로 */
@@ -92,6 +93,22 @@ export function SettingsPage() {
   // 계정(프로필 로그인) 관련. 위의 `profile` 은 신체 정보라 이름을 구분한다.
   const { profile: account, signOut, refresh } = useAuth();
   const drive = useDriveSync();
+
+  // 음성 안내 / 세트 진행 속도
+  const [voiceEnabled, setVoiceEnabled] = useState(() => settingsRepository.getVoiceEnabled());
+  const [{ prepSec, repTempoSec }, setPaceState] = useState(() => settingsRepository.getPace());
+
+  const changeVoice = (on: boolean) => {
+    settingsRepository.setVoiceEnabled(on);
+    setVoiceEnabled(on);
+    if (on) speech.speak('음성 안내를 켰습니다');
+    else speech.cancel();
+  };
+
+  const changePace = (patch: Partial<{ prepSec: number; repTempoSec: number }>) => {
+    settingsRepository.setPace(patch);
+    setPaceState(settingsRepository.getPace());
+  };
   const [pinDialog, setPinDialog] = useState(false);
   const [questionDialog, setQuestionDialog] = useState(false);
   const [currentPin, setCurrentPin] = useState('');
@@ -259,6 +276,58 @@ export function SettingsPage() {
               </div>
             </>
           )}
+        </Card>
+
+        {/* 음성 안내 — 운동 중 호령 */}
+        <Card>
+          <Text variant="title" as="h2">음성 안내</Text>
+          <Text variant="body-small" color="secondary" style={{ marginTop: 4, marginBottom: 12 }}>
+            세트를 시작하면 "자세를 준비하세요" 안내 후 <b>하나, 둘, 셋…</b> 하고 세어 줍니다.
+            버티는 운동은 남은 시간을 알려 줍니다. 운동 화면 오른쪽 위에서도 바로 끌 수 있습니다.
+          </Text>
+          <div className={styles.optionGroup} role="group" aria-label="음성 안내">
+            <Button
+              variant={voiceEnabled ? 'filled' : 'outlined'}
+              leftIcon="volume-on"
+              onClick={() => changeVoice(true)}
+              aria-pressed={voiceEnabled}
+            >
+              소리 켜기
+            </Button>
+            <Button
+              variant={!voiceEnabled ? 'filled' : 'outlined'}
+              leftIcon="volume-off"
+              onClick={() => changeVoice(false)}
+              aria-pressed={!voiceEnabled}
+            >
+              무음
+            </Button>
+          </div>
+
+          <div className={styles.profileRow}>
+            <Stepper
+              label="준비 시간"
+              value={prepSec}
+              min={0}
+              max={10}
+              step={1}
+              unit="초"
+              onChange={(v) => changePace({ prepSec: v })}
+            />
+            <Stepper
+              label="1회당 시간"
+              value={repTempoSec}
+              min={1}
+              max={6}
+              step={1}
+              unit="초"
+              onChange={(v) => changePace({ repTempoSec: v })}
+            />
+          </div>
+          <Text variant="body-small" color="secondary" style={{ marginTop: 8 }}>
+            "1회당 시간"은 호령 간격입니다. 3초면 하나 — (3초) — 둘 — (3초) … 순으로 진행합니다.
+            빠르게 하고 싶으면 2초로 줄이세요.
+          </Text>
         </Card>
 
         {/* 신체 정보 — 처음 하는 운동의 시작 중량 추천에 사용 */}

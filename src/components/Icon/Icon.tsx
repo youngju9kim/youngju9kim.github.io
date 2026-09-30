@@ -36,7 +36,9 @@ export type IconName =
   | 'sun'
   | 'moon'
   | 'list'
-  | 'shuffle';
+  | 'shuffle'
+  | 'volume-on'
+  | 'volume-off';
 
 /** 24x24 viewBox 기준 path 데이터 (stroke 기반, 일부 fill) */
 const PATHS: Record<IconName, JSX.Element> = {
@@ -145,6 +147,20 @@ const PATHS: Record<IconName, JSX.Element> = {
     <>
       <path d="M9 6h11M9 12h11M9 18h11" />
       <path d="M4 6h.01M4 12h.01M4 18h.01" />
+    </>
+  ),
+  /** 음성 안내 켜짐 */
+  'volume-on': (
+    <>
+      <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" />
+      <path d="M16 9.2a4 4 0 0 1 0 5.6M18.6 6.6a7.5 7.5 0 0 1 0 10.8" />
+    </>
+  ),
+  /** 음성 안내 꺼짐(무음) */
+  'volume-off': (
+    <>
+      <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" />
+      <path d="M16.5 10l4 4M20.5 10l-4 4" />
     </>
   ),
   /** 다시 뽑기 — 구성을 새로 섞는다 */

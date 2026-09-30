@@ -102,6 +102,42 @@
   margin-top: var(--space-8);
   text-align: center;
 }
+
+/* 헤더 우측 동작들(음성 토글 · 종료) */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* 세트 n/3 표시 */
+.setLabel {
+  display: block;
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+/* 자동 진행 중 — 버튼 자리에 들어가는 카운트 영역 */
+.runner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+.runnerCount {
+  margin: 0;
+  font-size: 64px;
+  line-height: 1.1;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  font-variant-numeric: tabular-nums;
+}
+.runnerTarget {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  margin-left: var(--space-8);
+}
 .tip {
   background: var(--color-surface-sunken);
   border: none;

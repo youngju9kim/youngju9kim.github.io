@@ -95,8 +95,18 @@ export function WorkoutSummaryPage() {
                 <div key={i} className={styles.prRow}>
                   <Text variant="body">{ex?.displayName ?? pr.exerciseId}</Text>
                   <Badge tone="pr" icon="trophy">
-                    {PR_TYPE_LABEL[pr.type]} {pr.value.toLocaleString()}
-                    {pr.type === 'reps' ? '회' : pr.type === 'weight' ? currentUnit() : ''}
+                    {/* 버티는 운동은 '반복'이 아니라 시간이다 */}
+                    {pr.type === 'reps' && ex?.repUnit === 'seconds'
+                      ? '최장 시간'
+                      : PR_TYPE_LABEL[pr.type]}{' '}
+                    {pr.value.toLocaleString()}
+                    {pr.type === 'reps'
+                      ? ex?.repUnit === 'seconds'
+                        ? '초'
+                        : '회'
+                      : pr.type === 'weight'
+                        ? currentUnit()
+                        : ''}
                   </Badge>
                 </div>
               );

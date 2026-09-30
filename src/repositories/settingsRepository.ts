@@ -56,6 +56,12 @@ export interface SettingsData {
   videoOverrides: Record<string, VideoOverride>;
   /** 시작 중량 추천용 신체 정보 */
   profile: UserProfile;
+  /** 운동 중 음성 안내(호령) 사용 여부 */
+  voiceEnabled: boolean;
+  /** 세트 시작 전 준비 시간(초) */
+  prepSec: number;
+  /** 반복 1회당 시간(초) — 호령 간격 */
+  repTempoSec: number;
 }
 
 export const DEFAULT_SETTINGS: SettingsData = {
@@ -65,6 +71,9 @@ export const DEFAULT_SETTINGS: SettingsData = {
   userName: '',
   videoOverrides: {},
   profile: DEFAULT_PROFILE,
+  voiceEnabled: true,
+  prepSec: 3,
+  repTempoSec: 3,
 };
 
 function readAll(): SettingsData {
@@ -116,6 +125,23 @@ export const settingsRepository = {
   },
   setUserName(userName: string): void {
     writeMerge({ userName });
+  },
+
+  /** 운동 중 음성 안내 — 헬스장에서 소리를 못 낼 때 끈다 */
+  getVoiceEnabled(): boolean {
+    return readAll().voiceEnabled;
+  },
+  setVoiceEnabled(voiceEnabled: boolean): void {
+    writeMerge({ voiceEnabled });
+  },
+
+  /** 세트 진행 속도 설정 (준비 시간 / 반복 1회당 시간) */
+  getPace(): { prepSec: number; repTempoSec: number } {
+    const all = readAll();
+    return { prepSec: all.prepSec, repTempoSec: all.repTempoSec };
+  },
+  setPace(patch: Partial<{ prepSec: number; repTempoSec: number }>): void {
+    writeMerge(patch);
   },
 
   getProfile(): UserProfile {
